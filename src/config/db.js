@@ -1,14 +1,17 @@
+require("dotenv").config()
+
 module.exports = {
-    "username": process.env.name_user_db || "njslkwjt",
-    "password": process.env.password || "oiZsr-r2_JsU8DkvkRk8YNPkWWKYxNxp",
-    "database": process.env.database || "njslkwjt",
-    "host": process.env.host || "kashin.db.elephantsql.com",
+    "username": process.env.name_user_db,
+    "password": process.env.password,
+    "database": process.env.database,
+    "host": process.env.host,
     "dialect": "postgres",
     "define": {
         timestamps: true,
         underscored: true,
     },
 }
+
 //yarn sequelize db:create
 //yarn sequelize migration:create --name=create-users
 //yarn sequelize db:migrate
