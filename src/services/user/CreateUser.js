@@ -19,7 +19,7 @@ async function CreateUser(data){
 
     const token = generateToken(user.id)
 
-    return { user, token }
+    return [user, token]
 }
 
 module.exports = CreateUser

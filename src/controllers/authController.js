@@ -12,7 +12,7 @@ class AuthController {
                 email, nome, senha, response
             })
 
-            return response.status(200).send({ success: true, user: CreateUserResponse })
+            return response.status(200).send({ success: true, user: CreateUserResponse[0], token: CreateUserResponse[1] })
         } catch (error) {
             console.log(error)
             return response.status(400).send({ error: "register failed" })
@@ -26,7 +26,7 @@ class AuthController {
                 email, senha, response
             })
 
-            return response.status(200).send({ success: true, user: AuthenticateUserResponse })
+            return response.status(200).send({ success: true, user: AuthenticateUserResponse[0], token: AuthenticateUserResponse[1] })
         } catch (error) {
             console.log(error)
             return response.status(400).send({ error: "authenticate failed" })
