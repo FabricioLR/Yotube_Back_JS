@@ -14,12 +14,13 @@ class AuthController {
 
             return response.status(200).send({ success: true, user: CreateUserResponse })
         } catch (error) {
+            console.log(error)
             return response.status(400).send({ error: "register failed" })
         }
     }
     async Authenticate(request, response){
         const { email, senha } = request.body
-
+    
         try {
             const AuthenticateUserResponse = await authenticateUser({
                 email, senha, response
@@ -27,6 +28,7 @@ class AuthController {
 
             return response.status(200).send({ success: true, user: AuthenticateUserResponse })
         } catch (error) {
+            console.log(error)
             return response.status(400).send({ error: "authenticate failed" })
         }
     }

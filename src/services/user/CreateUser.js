@@ -11,7 +11,7 @@ async function CreateUser(data){
         return data.response.status(400).send({ error: "email already used" })
     }
 
-    const senha = generateHash(data.senha)
+    const senha = await generateHash(data.senha)
 
     const user = await User.create({ email: data.email, senha, nome: data.nome, foto_url: "" })
     
