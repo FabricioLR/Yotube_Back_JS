@@ -59,6 +59,18 @@ class AuthController {
             return response.status(400).send({ error: "profile failed" })
         }
     }
+    async GetHistoric(request, response){
+        const { userId } = request
+        try {
+            const GetHistoricResponse = await searchVideos({
+                namesearch
+            })
+
+            return response.status(200).send({ success: true, videos: SearchVideosResponse })
+        } catch (error) {
+            return response.status(400).send({ error: "search videos failed"})
+        }
+    }
 }
 
 module.exports = AuthController

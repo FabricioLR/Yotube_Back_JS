@@ -10,9 +10,11 @@ const routes = express.Router()
 
 const authController = require("./controllers/authController")
 const videoController = require("./controllers/videoController")
+const historicController = require("./controllers/historicController")
 
 const AuthController = new authController()
 const VideoContrller = new videoController()
+const HistoricController = new historicController()
 
 const VerifyToken = require("./services/security/VerifyToken")
 const FirebaseStorageVideo = require("./services/firebaseStorage/FirebaseStorageVideo")
@@ -28,5 +30,7 @@ routes.post("/GetVideo", VideoContrller.GetVideo)
 routes.post("/SearchVideos", VideoContrller.SearchVideos)
 routes.get("/GetVideos", VideoContrller.GetVideos)
 routes.put("/UpdateVisualizations", VideoContrller.UpdateVisualizations)
+
+routes.post("/AddToHistoric", HistoricController.AddToHistoric)
 
 module.exports = routes

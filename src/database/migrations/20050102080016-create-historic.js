@@ -2,30 +2,24 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return await queryInterface.createTable('users', { 
+    return await queryInterface.createTable('users_historic', { 
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      senha: {
-        type: Sequelize.STRING,
+      userd_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        select: false,
+        references: { model: "users", key: "id"},
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      email: {
-        type: Sequelize.STRING,
+      video_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true
-      },
-      nome: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      foto_url: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        references: { model: "videos", key: "id"},
       },
       created_at: {
         type: Sequelize.DATE,
@@ -39,6 +33,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return await queryInterface.dropTable('users');
+    return await queryInterface.dropTable('users_historic');
   }
 };

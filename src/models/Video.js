@@ -14,6 +14,7 @@ class Video extends Model{
     }
     static associate(models){
         this.belongsTo(models.User, { foreignKey: "owner", as: "users" })
+        this.belongsToMany(models.User, { foreignKey: "video_id", as: "historic", through: "users-historic-video" })
     }
 }
 

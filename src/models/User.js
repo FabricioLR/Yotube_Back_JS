@@ -13,6 +13,7 @@ class User extends Model{
     }
     static associate(models){
         this.hasMany(models.Video, { foreignKey: "owner", as: "videos" })
+        this.belongsToMany(models.Video, { foreignKey: "user_id", as: "historic", through: "users-historic-user" })
     }
 }
 module.exports = User

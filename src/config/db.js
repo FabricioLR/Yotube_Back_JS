@@ -1,8 +1,8 @@
 module.exports = {
-    "username": process.env.name_user_db,
-    "password": process.env.password,
-    "database": process.env.database,
-    "host": process.env.host,
+    "username": process.env.name_user_db || "njslkwjt",
+    "password": process.env.password || "oiZsr-r2_JsU8DkvkRk8YNPkWWKYxNxp",
+    "database": process.env.database || "njslkwjt",
+    "host": process.env.host || "kashin.db.elephantsql.com",
     "dialect": "postgres",
     "define": {
         timestamps: true,
