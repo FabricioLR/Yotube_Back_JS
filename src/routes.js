@@ -15,8 +15,8 @@ const AuthController = new authController()
 const VideoContrller = new videoController()
 
 const VerifyToken = require("./services/security/VerifyToken")
-const FirebaseStorageVideo = require("./services/firebase/FirebaseStorageVideo.js")
-const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage.js")
+const FirebaseStorageVideo = require("./services/firebase/FirebaseStorageVideo")
+const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage")
 
 routes.post("/Register", AuthController.Register)
 routes.post("/Authenticate", AuthController.Authenticate)
