@@ -1,82 +1,62 @@
-const User = require("../models/User")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
+const createUser = require("../services/user/CreateUser")
+const authenticateUser = require("../services/user/AuthenticateUser")
+const authenticateByToken = require("../services/user/AuthenticateByToken")
+const changeUserImage = require("../services/user/ChangeUserImage")
 
-function generateToken(id){
-    const token = jwt.sign({ id: id }, process.env.SECRET, {
-        expiresIn: 86400,
-    })
+class AuthController {
+    async Register(request, response){
+        const { email, nome, senha } = request.body
 
-    return token
-}
-
-module.exports = {
-    async register(req, res){
         try {
-            if (await User.findOne({ where: { "email": req.body["email"] }})){
-                return res.status(400).send({ error: "email already used" })
-            }
-            const senha = await bcrypt.hash(req.body["senha"], 10)
-            const user = await User.create({ email: req.body["email"], senha: senha, nome: req.body["nome"], foto_url: "" })
-            
-            user["senha"] = undefined
-
-            return res.status(200).send({ success: true, user: user, token: generateToken(user.id) })
-        } catch (error) {
-            return res.status(400).send({ error: "register failed" })
-        }
-    },
-    async authenticate(req, res){
-        try {
-            const user = await User.findOne({ where: { "email": req.body["email"] }})
-
-            if (!user){
-                return res.status(400).send({ error: "user not found" })
-            }
-            
-            if (!await bcrypt.compare(req.body["senha"], user.senha)){
-                return res.status(400).send({ error: "password invalid" })
-            }
-
-            user["senha"] = undefined
-
-            return res.status(200).send({ success: true, user: user, token: generateToken(user.id) })
-        } catch (error) {
-            return res.status(400).send({ error: "authenticate failed" })
-        }
-    },
-    async profile(req, res){
-        try {
-            const user = await User.findOne({ where: { "id": req.userId }})
-
-            if (!user){
-                return res.status(400).send({ error: "user not found" })
-            }
-
-            user.senha = undefined
-
-            return res.status(200).send({ success: true, user: user })
-        } catch (error) {
-            return res.status(400).send({ error: "profile failed" })
-        }
-    },
-    async changeImage(req, res){
-        try {
-            const user = await User.update({
-                foto_url: req.file.url
-            }, {
-                where: {
-                    id: req.userId
-                }
+            const CreateUserResponse = await createUser({
+                email, nome, senha, response
             })
 
-            if (!user){
-                return res.status(400).send({ error: "user not found" })
-            }
-
-            return res.status(200).send({ success: true })
+            return response.status(200).send({ success: true, user: CreateUserResponse })
         } catch (error) {
-            return res.status(400).send({ error: "profile failed" })
-        } 
+            return response.status(400).send({ error: "register failed" })
+        }
+    }
+    async Authenticate(request, response){
+        const { email, senha } = request.body
+
+        try {
+            const AuthenticateUserResponse = await authenticateUser({
+                email, senha, response
+            })
+
+            return response.status(200).send({ success: true, user: AuthenticateUserResponse })
+        } catch (error) {
+            return response.status(400).send({ error: "authenticate failed" })
+        }
+    }
+    async AuthenticateByToken(request, response){
+        const { userId } = request
+
+        try {
+            const AuthenticateByTokenResponse = await authenticateByToken({
+                userId, response
+            })
+
+            return response.status(200).send({ success: true, user: AuthenticateByTokenResponse })
+        } catch (error) {
+            return response.status(400).send({ error: "authenticate by token failed" })
+        }
+    }
+    async ChangeUserImage(request, response){
+        const { url } = request.file
+        const { userId } = request
+
+        try {
+            const ChangeUserImageResponse = await changeUserImage({
+                url, userId, response
+            })
+
+            return response.status(200).send({ success: true })
+        } catch (error) {
+            return response.status(400).send({ error: "profile failed" })
+        }
     }
 }
+
+module.exports = AuthController

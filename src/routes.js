@@ -8,22 +8,25 @@ const Multer = multer({
 
 const routes = express.Router()
 
-const authMiddleware = require("./middlewares/authMiddleware")
+const authController = require("./controllers/authController")
+const videoController = require("./controllers/videoController")
+
+const AuthController = new authController()
+const VideoContrller = new videoController()
+
+const VerifyToken = require("./services/security/VerifyToken")
 const FirebaseStorageVideo = require("./services/firebase/FirebaseStorageVideo.js")
 const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage.js")
 
-const videoController = require("./controllers/videoController")
-const authController = require("./controllers/authController")
+routes.post("/Register", AuthController.Register)
+routes.post("/Authenticate", AuthController.Authenticate)
+routes.post("/ChangeuserImage", VerifyToken, Multer.single("file"), FirebaseStorageImage, AuthController.ChangeUserImage)
+routes.get("/AuthenticateByToken", VerifyToken, AuthController.AuthenticateByToken)
 
-routes.post("/addvideo", authMiddleware, Multer.single("file"), FirebaseStorageVideo, videoController.store)
-routes.post("/getexpecifyvideo", videoController.getexpecifyvideo)
-routes.post("/searchvideos", videoController.searchvideos)
-routes.get("/getvideos", videoController.getdata)
-routes.put("/updatevisualizacoes", videoController.updatevisualizacoes)
-
-routes.post("/register", authController.register)
-routes.post("/authenticate", authController.authenticate)
-routes.post("/ChangeImage", authMiddleware, Multer.single("file"), FirebaseStorageImage, authController.changeImage)
-routes.get("/profile", authMiddleware, authController.profile)
+routes.post("/CreateVideo", VerifyToken, Multer.single("file"), FirebaseStorageVideo, VideoContrller.CreateVideo)
+routes.post("/GetVideo", VideoContrller.GetVideo)
+routes.post("/SearchVideos", VideoContrller.SearchVideos)
+routes.get("/GetVideos", VideoContrller.GetVideos)
+routes.put("/UpdateVisualizations", VideoContrller.UpdateVisualizations)
 
 module.exports = routes

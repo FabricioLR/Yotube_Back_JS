@@ -1,98 +1,72 @@
-const Video = require("../models/Video")
-const User = require("../models/User")
+const createVideo = require("../services/video/CreateVideo")
+const getVideos = require("../services/video/GetVideos")
+const getVideo = require("../services/video/GetVideo")
+const updateVisualizations = require("../services/video/UpdateVisualizations")
+const searchVideos = require("../services/video/SearchVideos")
 
-module.exports = {
-    async store(req, res){
+class VideoController {
+    async CreateVideo(request, response){
+        const { nome, owner } = request.headers
+        const { url } = request.file
+
         try {
-            const { nome, owner } = req.headers
-            const { url } = req.file
-            
-            if (!await User.findByPk(owner)){
-                return res.status(400).send({ error: "user not found" })
-            }
-
-            const video = await Video.create({
-                nome,
-                url,
-                owner,
-                like: 0,
-                deslike: 0,
-                visualizacoes: 0,
+            const CreateUserResponse = await createVideo({
+                nome, owner, url, response
             })
             
-            return res.status(200).send({ success: true, video: video})
+            return response.status(200).send({ success: true })
         } catch (error) {
             console.log(error)
-            return res.status(400).send({ error: "create failed"})
+            return response.status(400).send({ error: "create video failed"})
         } 
-    },
-    async getdata(req, res){
+    }
+    async GetVideos(request, response){
         try {
-            const videos = await Video.findAll()
+            const GetVideosResponse = await getVideos()
             
-            return res.status(200).send({ success: true, videos: videos})
+            return response.status(200).send({ success: true, videos: GetVideosResponse })
         } catch (error) {
-            return res.status(400).send({ error: "cath failed"})
+            return response.status(400).send({ error: "get videos failed"})
         }
-    },
-    async updatevisualizacoes(req, res){
+    }
+    async GetVideo(request, response){
+        const { videoId } = request.body
+
         try {
-            const video = await Video.findAll({
-                attributes: ["visualizacoes"],
-                where: {
-                    id: req.body["videoId"]
-                }
+            const GetVideoResponse = await getVideo({
+                videoId, response
             })
 
-            if (video){
-                const visualizacoes = await Video.update(
-                    {
-                        visualizacoes: Number(video[0]["dataValues"]["visualizacoes"]) + 1
-                    },
-                    {
-                        where: {
-                                id: req.body["videoId"]
-                            }
-                    }
-                )
-                return res.status(200).send({ success: true, video: video})
-            } else {
-                return res.status(400).send({ error: "id not found" })
-            }
+            return response.status(200).send({ success: true, video: GetVideoResponse })
         } catch (error) {
-            return res.status(400).send({ error: "update failed"})
+            return response.status(400).send({ error: "get video failed"})
         }
-    },
-    async getexpecifyvideo(req, res){
+    }
+    async UpdateVisualizations(request, response){
+        const { videoId } = request.body
+
         try {
-            const video = await Video.findByPk(req.body["videoId"], {
-                include: { association: "users" }
+            const UpdateVisulaizationsResponse = await updateVisualizations({
+                videoId, response
             })
 
-            video.users.senha = undefined
-            
-            return res.status(200).send({ success: true, video: video})
+            return response.status(200).send({ success: true, video: UpdateVisulaizationsResponse })
         } catch (error) {
-            return res.status(400).send({ error: "cath failed"})
+            return response.status(400).send({ error: "update failed"})
         }
-    },
-    async searchvideos(req, res){
+    }
+    async SearchVideos(request, response){
+        const { namesearch } = request.body
         try {
-            const videos = await Video.findAll({
-                include: { association: "users" }
+            const SearchVideosResponse = await searchVideos({
+                namesearch
             })
 
-            const list = []
-
-            for (const video of videos){
-                if (String(video.nome).toLocaleLowerCase().includes(String(req.body.namesearch).toLocaleLowerCase())){
-                    list.push(video)
-                }
-            }
-            
-            return res.status(200).send({ success: true, videos: list})
+            return response.status(200).send({ success: true, videos: SearchVideosResponse })
         } catch (error) {
-            return res.status(400).send({ error: "cath failed"})
+            return response.status(400).send({ error: "search videos failed"})
         }
-    },
+    }
 }
+
+module.exports = VideoController
