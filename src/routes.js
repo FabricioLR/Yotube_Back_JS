@@ -20,7 +20,7 @@ const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage.j
 
 routes.post("/Register", AuthController.Register)
 routes.post("/Authenticate", AuthController.Authenticate)
-routes.post("/ChangeuserImage", VerifyToken, Multer.single("file"), FirebaseStorageImage, AuthController.ChangeUserImage)
+routes.post("/ChangeUserImage", VerifyToken, Multer.single("file"), FirebaseStorageImage, AuthController.ChangeUserImage)
 routes.get("/AuthenticateByToken", VerifyToken, AuthController.AuthenticateByToken)
 
 routes.post("/CreateVideo", VerifyToken, Multer.single("file"), FirebaseStorageVideo, VideoContrller.CreateVideo)
