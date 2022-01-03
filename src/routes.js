@@ -13,6 +13,7 @@ routes.get("/getvideos", videoController.getdata)
 routes.put("/updatevisualizacoes", videoController.updatevisualizacoes)
 
 routes.post("/register", authController.register)
+routes.post("/authenticate", authController.authenticate)
 routes.post("/profile", authMiddleware, authController.profile)
 
 module.exports = routes
