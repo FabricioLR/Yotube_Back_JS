@@ -1,12 +1,12 @@
-const { Client } = require('pg')
+const Sequelize = require("sequelize")
+const dbconfig = require("../config/db")
 
-const client = new Client({
-    user: process.env.user,
-    host: process.env.host,
-    database: process.env.database,
-    password: process.env.password,
-})
+const Video = require("../models/Video")
+const User = require("../models/User")
 
-client.connect()
+const connection = new Sequelize(dbconfig)
 
-module.exports = client
+Video.init(connection)
+User.init(connection)
+
+module.exports = connection

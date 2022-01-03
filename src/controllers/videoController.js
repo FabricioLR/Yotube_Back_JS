@@ -1,30 +1,68 @@
-const connection = require("../database/index")
+const Video = require("../models/Video")
+const User = require("../models/User")
 
 module.exports = {
     async store(req, res){
         try {
-            const rows = await connection.query("INSERT INTO videos (nome, url) VALUES ($1, $2)", [req.body["nome"], req.body["url"]])
-           // const rows = await connection.query("TRUNCATE videos")
-            return res.status(200).send({ success: true, rows: rows })
+            const { nome, url } = req.body
+
+            const video = await Video.create({
+                nome,
+                url,
+                like: 0,
+                deslike: 0,
+                visualizacoes: 0,
+            })
+            
+            return res.status(200).send({ success: true, video: video})
         } catch (error) {
-            return res.status(200).send({ error: "error"})
+            return res.status(400).send({ error: "create failed"})
         }
     },
     async getdata(req, res){
         try {
-            const rows = await connection.query("SELECT * FROM videos")
-            return res.status(200).send({ success: true, rows: rows })
+            const videos = await Video.findAll()
+            
+            return res.status(200).send({ success: true, videos: videos})
         } catch (error) {
-            return res.status(200).send({ error: "error"})
+            return res.status(400).send({ error: "cath failed"})
+        }
+    },
+    async updatevisualizacoes(req, res){
+        try {
+            const video = await Video.findAll({
+                attributes: ["visualizacoes"],
+                where: {
+                    id: req.body["videoId"]
+                }
+            })
+
+            if (video){
+                const visualizacoes = await Video.update(
+                    {
+                        visualizacoes: Number(video[0]["dataValues"]["visualizacoes"]) + 1
+                    },
+                    {
+                        where: {
+                                id: req.body["videoId"]
+                            }
+                    }
+                )
+                return res.status(200).send({ success: true, visualizacoes: visualizacoes})
+            } else {
+                return res.status(400).send({ error: "id not found" })
+            }
+        } catch (error) {
+            return res.status(400).send({ error: "update failed"})
         }
     },
     async getexpecifyvideo(req, res){
         try {
-            const rows = await connection.query(`SELECT * FROM videos WHERE id = '${req.body["videoId"]}'`)
-            return res.status(200).send({ success: true, rows: rows })
+            const video = await Video.findByPk(req.body["videoId"])
+            
+            return res.status(200).send({ success: true, video: video})
         } catch (error) {
-            console.log(error)
-            return res.status(200).send({ error: "error"})
+            return res.status(400).send({ error: "cath failed"})
         }
-    }
+    },
 }
