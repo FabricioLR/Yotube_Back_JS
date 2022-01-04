@@ -49,7 +49,7 @@ module.exports = {
                             }
                     }
                 )
-                return res.status(200).send({ success: true, visualizacoes: visualizacoes})
+                return res.status(200).send({ success: true, video: video})
             } else {
                 return res.status(400).send({ error: "id not found" })
             }
