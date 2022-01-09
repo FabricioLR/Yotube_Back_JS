@@ -9,7 +9,6 @@ module.exports = {
         underscored: true,
     },
 }
-
 //yarn sequelize db:create
 //yarn sequelize migration:create --name=create-users
 //yarn sequelize db:migrate

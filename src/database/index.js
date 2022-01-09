@@ -9,4 +9,7 @@ const connection = new Sequelize(dbconfig)
 Video.init(connection)
 User.init(connection)
 
+Video.associate(connection.models)
+User.associate(connection.models)
+
 module.exports = connection

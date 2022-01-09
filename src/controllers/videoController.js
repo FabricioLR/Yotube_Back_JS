@@ -4,15 +4,20 @@ const User = require("../models/User")
 module.exports = {
     async store(req, res){
         try {
-            const { nome, url } = req.body
+            const { nome, url, owner } = req.body
+            
+            if (!await User.findByPk(owner)){
+                return res.status(400).send({ error: "user not found" })
+            }
 
             const video = await Video.create({
                 nome,
                 url,
+                owner,
                 like: 0,
                 deslike: 0,
                 visualizacoes: 0,
-            })
+            }) 
             
             return res.status(200).send({ success: true, video: video})
         } catch (error) {
@@ -25,7 +30,6 @@ module.exports = {
             
             return res.status(200).send({ success: true, videos: videos})
         } catch (error) {
-            console.log(error)
             return res.status(400).send({ error: "cath failed"})
         }
     },
@@ -59,7 +63,11 @@ module.exports = {
     },
     async getexpecifyvideo(req, res){
         try {
-            const video = await Video.findByPk(req.body["videoId"])
+            const video = await Video.findByPk(req.body["videoId"], {
+                include: { association: "users" }
+            })
+
+            video.users.senha = undefined
             
             return res.status(200).send({ success: true, video: video})
         } catch (error) {

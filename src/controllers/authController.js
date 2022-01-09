@@ -17,7 +17,7 @@ module.exports = {
                 return res.status(400).send({ error: "email already used" })
             }
             const senha = await bcrypt.hash(req.body["senha"], 10)
-            const user = await User.create({ email: req.body["email"], senha: senha, nome: req.body["nome"], liked: "", desliked: "" })
+            const user = await User.create({ email: req.body["email"], senha: senha, nome: req.body["nome"], foto_url: "" })
             
             user["senha"] = undefined
 
@@ -52,6 +52,8 @@ module.exports = {
             if (!user){
                 return res.status(400).send({ error: "user not found" })
             }
+
+            user.senha = undefined
 
             return res.status(200).send({ success: true, user: user })
         } catch (error) {

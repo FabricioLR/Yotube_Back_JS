@@ -7,10 +7,13 @@ class Video extends Model{
             url: DataTypes.STRING,
             like: DataTypes.INTEGER,
             deslike: DataTypes.INTEGER,
-            visualizacoes: DataTypes.INTEGER
+            visualizacoes: DataTypes.INTEGER,
         }, {
-            sequelize
+            sequelize,
         })
+    }
+    static associate(models){
+        this.belongsTo(models.User, { foreignKey: "owner", as: "users" })
     }
 }
 
