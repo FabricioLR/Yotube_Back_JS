@@ -4,7 +4,8 @@ const User = require("../models/User")
 module.exports = {
     async store(req, res){
         try {
-            const { nome, url, owner } = req.body
+            const { nome, owner } = req.headers
+            const { url } = req.file
             
             if (!await User.findByPk(owner)){
                 return res.status(400).send({ error: "user not found" })
@@ -17,12 +18,13 @@ module.exports = {
                 like: 0,
                 deslike: 0,
                 visualizacoes: 0,
-            }) 
+            })
             
             return res.status(200).send({ success: true, video: video})
         } catch (error) {
+            console.log(error)
             return res.status(400).send({ error: "create failed"})
-        }
+        } 
     },
     async getdata(req, res){
         try {
@@ -70,6 +72,25 @@ module.exports = {
             video.users.senha = undefined
             
             return res.status(200).send({ success: true, video: video})
+        } catch (error) {
+            return res.status(400).send({ error: "cath failed"})
+        }
+    },
+    async searchvideos(req, res){
+        try {
+            const videos = await Video.findAll({
+                include: { association: "users" }
+            })
+
+            const list = []
+
+            for (const video of videos){
+                if (String(video.nome).toLocaleLowerCase().includes(String(req.body.namesearch).toLocaleLowerCase())){
+                    list.push(video)
+                }
+            }
+            
+            return res.status(200).send({ success: true, videos: list})
         } catch (error) {
             return res.status(400).send({ error: "cath failed"})
         }
