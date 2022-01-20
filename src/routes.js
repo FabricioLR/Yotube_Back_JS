@@ -9,8 +9,8 @@ const Multer = multer({
 const routes = express.Router()
 
 const authMiddleware = require("./middlewares/authMiddleware")
-const FirebaseStorageVideo = require("./services/firebase/FirebaseStorageVideo")
-const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage")
+const FirebaseStorageVideo = require("./services/firebase/FirebaseStorageVideo.js")
+const FirebaseStorageImage = require("./services/firebase/FirebaseStorageImage.js")
 
 const videoController = require("./controllers/videoController")
 const authController = require("./controllers/authController")
