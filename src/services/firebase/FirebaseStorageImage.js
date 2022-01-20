@@ -1,4 +1,4 @@
-const storage = require("./index")
+const storage = require("./firebase")
 
 const UploadImage = (req, res, next) => {
     if (!req.file) return next()
