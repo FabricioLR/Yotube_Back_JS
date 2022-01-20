@@ -1,17 +1,6 @@
-var admin = require("firebase-admin")
+const storage = require("./index")
 
-var serviceAccount = require("../config/FirebaseConfig.json")
-
-const Bucket = "teste-javascript-2062a.appspot.com"
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: Bucket
-})
-
-const storage = admin.storage().bucket()
-
-const UploadImage = (req, res, next) => {
+const UploadVideo = (req, res, next) => {
     if (!req.file) return next()
 
     const video = req.file
@@ -37,4 +26,4 @@ const UploadImage = (req, res, next) => {
 
 }
 
-module.exports = UploadImage
+module.exports = UploadVideo

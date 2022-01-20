@@ -59,5 +59,24 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({ error: "profile failed" })
         }
+    },
+    async changeImage(req, res){
+        try {
+            const user = await User.update({
+                foto_url: req.file.url
+            }, {
+                where: {
+                    id: req.userId
+                }
+            })
+
+            if (!user){
+                return res.status(400).send({ error: "user not found" })
+            }
+
+            return res.status(200).send({ success: true })
+        } catch (error) {
+            return res.status(400).send({ error: "profile failed" })
+        } 
     }
 }
