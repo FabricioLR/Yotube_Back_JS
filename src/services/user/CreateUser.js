@@ -8,16 +8,25 @@ async function CreateUser(data){
     }})
 
     if (UserAlreadyExists){
+        console.log("sim")
         return data.response.status(400).send({ error: "email already used" })
     }
 
+    console.log("nao")
+
     const senha = await generateHash(data.senha)
 
+    console.log(senha)
+
     const user = await User.create({ email: data.email, senha, nome: data.nome, foto_url: "" })
+
+    console.log(user)
     
     user.senha = undefined
 
     const token = generateToken(user.id)
+
+    console.log(token)
 
     return [user, token]
 }

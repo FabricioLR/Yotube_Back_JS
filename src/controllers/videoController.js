@@ -8,11 +8,13 @@ class VideoController {
     async CreateVideo(request, response){
         const { nome, owner } = request.headers
         const { url } = request.file
-
+        console.log(nome, owner, url)
         try {
             const CreateUserResponse = await createVideo({
                 nome, owner, url, response
             })
+
+            console.log(CreateUserResponse)
             
             return response.status(200).send({ success: true })
         } catch (error) {

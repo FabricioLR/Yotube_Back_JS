@@ -32,5 +32,6 @@ routes.get("/GetVideos", VideoContrller.GetVideos)
 routes.put("/UpdateVisualizations", VideoContrller.UpdateVisualizations)
 
 routes.post("/AddToHistoric", HistoricController.AddToHistoric)
+routes.post("/GetHistoric", HistoricController.GetHistoric)
 
 module.exports = routes
